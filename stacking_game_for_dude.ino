@@ -70,7 +70,7 @@ void setup() {
   //This frees up that global variable "int i"..  as in, if the system doesn't need it at the moment, then it
   //  can release the memory.  By keeping it global, it will always be allocated.
   //If you know DISPLAY_COUNT will always be less than 128, you can actually use BYTE.  this is 1 byte, rather 
-  //  than int, which is 4 bytes
+  //  than int, which is 2 bytes
 
   //I deleted i from your global variables, so you need to define it here as a local variable.
   byte i = 0;
@@ -90,7 +90,6 @@ void setup() {
     lc.shutdown(i, false);
     lc.setIntensity(i, 6);
     lc.clearDisplay(i);
-    i++;
   }
 */
 
