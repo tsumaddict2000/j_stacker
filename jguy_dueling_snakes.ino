@@ -209,6 +209,61 @@ int createfood() { //generate a valid food placement
     return f; //return the valid foods position
   }
 }
+//Honestly, this isn't reeeally how recursive functions work.  They are usually bound to a certain limit..
+//Liiike, pass in a value of 20, and then we call it, and each time we pass it 1 less, and we have a check
+//  for if in_value == 1: Do specific thing, and return.  (do NOT call itself again..).
+//It's not like it'll really happen, but you coouuuld be stuck in an infinite (or really long) call chain.
+//You really just want something more like this...  just a while loop til you get what you want.  And maybe 
+//  limit it, so that you try 10 times, and then just give up and start adding values until it works..
+int createfood2()
+{
+	bool tmp_fail = false;
+	byte f = random(64);
+	byte tmp_tries = 0;
+	bool tmp_found = checkFoodLocation(f);
+	while (tmp_found == false && tmp_tries < 10) {
+		//it didn't work.. try another one..
+		tmp_tries += 1;
+		f = random(64);
+		tmp_found = checkFoodLocation(f);
+	}
+	//We got past the while loop.  Sucessfully??
+	if (tmp_found == false) {
+		//nope!  that means we hit 10 tries.... Now just start adding 1 to our f value.. eventually we'll find 
+		//  an open spot....
+		//you can use a do{}while() loop, instead of doubling the code..
+		//f += 1;
+		//tmp_found = checkFoodLocation(f);
+		//while (tmp_found == false) {
+		do {
+			f += 1;
+			if (f == 64) {
+				f = 0;
+			}
+			tmp_found = checkFoodLocation(f);
+			//we are guaranteed to eventually find one, because the snakes do not fill the entire screen.			
+		} while (tmp_found == false);
+	}
+
+	//OK, at this point we have a food!  Do the food part..
+	strip.setPixelColor(led[f], 100, 100, 100); //set the new food on with all colors (white)
+	return f; //return the valid foods position
+}
+
+bool checkFoodLocation(byte in_loc)
+{
+	for (int i = 0; i < 2; i++) { //for both players
+		for (int k = 0; k < props[i][2]; k++) { //for the players entire lengths
+			if (f == body[i][k][0] + body[i][k][1] * 8) { //if the random number is the position of the body segment
+				//random number is on a snake!  fail!
+				return false;
+			}
+		}
+	}
+	//we got this far, so we are proud to announce that the food is not on a snake!
+	return true;	
+}
+
 
 void checkfood() { //check if either player is on the food
   for (int i = 0; i < 2; i++) { //for both players
